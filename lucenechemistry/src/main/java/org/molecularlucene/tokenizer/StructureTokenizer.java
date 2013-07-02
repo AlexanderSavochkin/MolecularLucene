@@ -65,7 +65,7 @@ public abstract class StructureTokenizer extends Tokenizer {
         setStructure(input);
     }
 
-    protected abstract void setStructure(Reader input);
+    protected abstract boolean setStructure(Reader input);
 
     protected void setStructure(IAtomContainer chemicalStructure) {
         //Initialize iterating through all structure's atoms
@@ -91,7 +91,11 @@ public abstract class StructureTokenizer extends Tokenizer {
         while (!currentPathIterator.hasNext()) {
             //Go to next atom
             if (!processNextAtom())
-                return false;
+                //It is possible that reader is reused, so try to reinitialize structure from reader
+                if ( setStructure( input ) )
+                    continue;
+                else
+                    return false;
         }
         List<IAtom> currentPath = currentPathIterator.next();
 

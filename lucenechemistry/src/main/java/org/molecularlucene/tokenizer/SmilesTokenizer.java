@@ -43,17 +43,19 @@ public class SmilesTokenizer extends StructureTokenizer {
     }
 
     @Override
-    protected void setStructure(Reader input) {
+    protected boolean setStructure(Reader input) {
         SmilesParser sp = new SmilesParser(DefaultChemObjectBuilder.getInstance());
         StringBuffer smilesBuffer = new StringBuffer();
 
         try {
             char[] buf = new char[1024];
-            int numRead=0;
+            int numRead = 0;
             while((numRead=input.read(buf)) != -1){
                 String readData = String.valueOf(buf, 0, numRead);
                 smilesBuffer.append(readData);
             }
+            if (smilesBuffer.length() == 0)
+                return false;
         }
         catch (IOException e) {
             throw new RuntimeException("Cant read similes string from Reader:" + e.toString() );
@@ -66,5 +68,6 @@ public class SmilesTokenizer extends StructureTokenizer {
             throw new RuntimeException("Cant parse similes string:" + e.toString() );
         }
 
+        return true;
     }
 }
