@@ -16,7 +16,9 @@ For example lucene index contains documents having fields "description" and "smi
 Field "description" is free-text description of chemical compound and "smiles" contais
 chemical structure information. A query to index looks like this:
 
-`description:"amino acid" AND smiles:"c1ccc2c(c1)cc[nH]2"`
+`description:"amino acid" AND smiles:c1ccc2c\(c1\)cc\[nH\]2`
+
+Note that characters (,),[ and ] are escaped becase they have special meaning in Lucene query syntax.
 
 Literally this means: Show me compounds having phrase "amino acid" in description and chemical structure similar to [indole](http://en.wikipedia.org/wiki/Indole) 
 (smiles:c1ccc2c(c1)cc[nH]2).
