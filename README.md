@@ -23,4 +23,4 @@ Note that characters (,),[ and ] are escaped becase they have special meaning in
 Literally this means: Show me compounds having phrase "amino acid" in description and chemical structure similar to [indole](http://en.wikipedia.org/wiki/Indole) 
 (smiles:c1ccc2c(c1)cc[nH]2).
 
-See [autotsests source code](https://github.com/AlexanderSavochkin/MolecularLucene/blob/master/lucenechemistry/src/test/java/org/molecularlucene/ChemicalStructureSearchTest.java) for basic example of usage.
+See [autotests source code](https://github.com/AlexanderSavochkin/MolecularLucene/blob/master/lucenechemistry/src/test/java/org/molecularlucene/ChemicalStructureSearchTest.java) for basic example of usage.

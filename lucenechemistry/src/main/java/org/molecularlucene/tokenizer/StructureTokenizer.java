@@ -5,8 +5,11 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.AttributeSource;
 
 import org.openscience.cdk.CDKConstants;
+import org.openscience.cdk.aromaticity.CDKHueckelAromaticityDetector;
+import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.interfaces.*;
 import org.openscience.cdk.graph.PathTools;
+import org.openscience.cdk.tools.manipulator.AtomContainerManipulator;
 import org.openscience.cdk.tools.periodictable.PeriodicTable;
 
 import java.io.IOException;
@@ -70,6 +73,16 @@ public abstract class StructureTokenizer extends Tokenizer {
     protected void setStructure(IAtomContainer chemicalStructure) {
         //Initialize iterating through all structure's atoms
         this.chemicalStructure = chemicalStructure;
+
+        //Calculate aromaticity
+        try {
+            AtomContainerManipulator.percieveAtomTypesAndConfigureAtoms(chemicalStructure);
+            CDKHueckelAromaticityDetector.detectAromaticity(chemicalStructure);
+        }
+        catch(CDKException e) {
+            throw new RuntimeException(e);
+        }
+
         currentAtomIterator = chemicalStructure.atoms().iterator();
         processNextAtom();
     }
