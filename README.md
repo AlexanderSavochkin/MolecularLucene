@@ -24,3 +24,9 @@ Literally this means: Show me compounds having phrase "amino acid" in descriptio
 (smiles:c1ccc2c(c1)cc[nH]2).
 
 See [autotests source code](https://github.com/AlexanderSavochkin/MolecularLucene/blob/master/lucenechemistry/src/test/java/org/molecularlucene/ChemicalStructureSearchTest.java) for basic example of usage.
+
+References
+----------
+
+[Post about this project](http://habrahabr.ru/post/185420/) at [habrahabr.ru](http://habrahabr.ru) (in Russian).
+
