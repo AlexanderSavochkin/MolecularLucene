@@ -38,10 +38,6 @@ public class SmilesTokenizer extends StructureTokenizer {
         super(factory, input);
     }
 
-    public   SmilesTokenizer(AttributeSource source, Reader input) {
-        super(source, input);
-    }
-
     @Override
     protected boolean setStructure(Reader input) {
         SmilesParser sp = new SmilesParser(DefaultChemObjectBuilder.getInstance());

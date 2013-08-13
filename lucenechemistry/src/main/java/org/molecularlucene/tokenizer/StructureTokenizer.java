@@ -4,6 +4,7 @@ import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.AttributeSource;
 
+import org.apache.lucene.util.Version;
 import org.openscience.cdk.CDKConstants;
 import org.openscience.cdk.aromaticity.CDKHueckelAromaticityDetector;
 import org.openscience.cdk.exception.CDKException;
@@ -60,11 +61,6 @@ public abstract class StructureTokenizer extends Tokenizer {
 
     protected StructureTokenizer(AttributeFactory factory, Reader input) {
         super(factory, input);
-        setStructure(input);
-    }
-
-    protected StructureTokenizer(AttributeSource source, Reader input) {
-        super(source, input);
         setStructure(input);
     }
 

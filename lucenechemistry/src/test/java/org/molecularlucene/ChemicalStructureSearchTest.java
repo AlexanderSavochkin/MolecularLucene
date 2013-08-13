@@ -125,11 +125,11 @@ public class ChemicalStructureSearchTest
     Analyzer getAnalyzer() {
         Map<String,Analyzer> analyzerPerField = new HashMap<String,Analyzer>();
 
-        analyzerPerField.put(FREE_TEXT_FIELD, new StandardAnalyzer(Version.LUCENE_40) );
+        analyzerPerField.put(FREE_TEXT_FIELD, new StandardAnalyzer(Version.LUCENE_43) );
         analyzerPerField.put(SMILES_FIELD, new SmilesAnalyzer() );
 
         PerFieldAnalyzerWrapper analyzerWrapper =
-                new PerFieldAnalyzerWrapper(new StandardAnalyzer(Version.LUCENE_40), analyzerPerField);
+                new PerFieldAnalyzerWrapper(new StandardAnalyzer(Version.LUCENE_43), analyzerPerField);
 
         return analyzerWrapper;
     }
@@ -140,7 +140,7 @@ public class ChemicalStructureSearchTest
         try {
             directory = new RAMDirectory();
             //directory = new SimpleFSDirectory( new File("D:\\work\\ttt\\") );  //For index structure debugging
-            IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_40, getAnalyzer());
+            IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_43, getAnalyzer());
             indexWriter = new IndexWriter( directory, config);
             for (Document doc: docs) {
                 indexWriter.addDocument(doc);
@@ -171,7 +171,7 @@ public class ChemicalStructureSearchTest
 
             String querystr = "smiles:CCC";
             Query q = null;
-            q = new QueryParser(Version.LUCENE_40, FREE_TEXT_FIELD, getAnalyzer()).parse(querystr);
+            q = new QueryParser(Version.LUCENE_43, FREE_TEXT_FIELD, getAnalyzer()).parse(querystr);
 
             TopScoreDocCollector collector = TopScoreDocCollector.create(5, true);
             searcher.search(q, collector);
@@ -200,7 +200,7 @@ public class ChemicalStructureSearchTest
 
             String querystr = "smiles:c1ccc\\(cc1\\)O";
             Query q = null;
-            q = new QueryParser(Version.LUCENE_40, FREE_TEXT_FIELD, getAnalyzer()).parse(querystr);
+            q = new QueryParser(Version.LUCENE_43, FREE_TEXT_FIELD, getAnalyzer()).parse(querystr);
 
             TopScoreDocCollector collector = TopScoreDocCollector.create(5, true);
             searcher.search(q, collector);

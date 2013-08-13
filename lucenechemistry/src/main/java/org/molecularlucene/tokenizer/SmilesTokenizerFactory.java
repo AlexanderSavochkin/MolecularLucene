@@ -2,8 +2,10 @@ package org.molecularlucene.tokenizer;
 
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.util.TokenizerFactory;
+import org.apache.lucene.util.AttributeSource;
 
 import java.io.Reader;
+import java.util.Map;
 
 /**
  Copyright 2013 Alexander Savochkin
@@ -21,8 +23,12 @@ import java.io.Reader;
  limitations under the License.
  */
 public class SmilesTokenizerFactory extends TokenizerFactory {
+    protected SmilesTokenizerFactory(Map<String, String> args) {
+        super(args);
+    }
+
     @Override
-    public Tokenizer create(Reader reader) {
+    public Tokenizer create(AttributeSource.AttributeFactory attributeFactory, Reader reader) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }
