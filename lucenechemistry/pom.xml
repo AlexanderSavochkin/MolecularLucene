@@ -12,6 +12,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!--According to http://blog.rueedlinger.ch/2012/09/use-github-as-maven-remote-repository/ Use your own path here! -->
+    <internal.repo.path>file:D:\work\maven-repository\</internal.repo.path>
   </properties>
 
   <dependencies>
@@ -64,4 +66,13 @@
         <url>http://ambit.uni-plovdiv.bg:8083/nexus/content/repositories/thirdparty</url>
      </repository>
   </repositories>  
+
+  <distributionManagement>
+    <repository>
+      <id>internal.repo</id>
+      <name>Internal Repository</name>
+      <url>${internal.repo.path}</url>
+    </repository>
+  </distributionManagement>
+
 </project>
