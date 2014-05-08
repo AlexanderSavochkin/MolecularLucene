@@ -29,4 +29,5 @@ References
 ----------
 
 [Post about this project](http://habrahabr.ru/post/185420/) at [habrahabr.ru](http://habrahabr.ru) (in Russian).
+Demo: chemical wikipedia search project [ChWiSe.Net](http://www.chwise.net/). Source code available on [github](https://github.com/AlexanderSavochkin/ChWiSe.Net).
 
