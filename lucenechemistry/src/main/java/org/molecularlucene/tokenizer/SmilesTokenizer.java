@@ -61,7 +61,7 @@ public class SmilesTokenizer extends StructureTokenizer {
             IAtomContainer structure = sp.parseSmiles( smilesBuffer.toString() );
             setStructure(structure);
         } catch (InvalidSmilesException e) {
-            throw new RuntimeException("Cant parse similes string:" + e.toString() );
+            throw new RuntimeException(e);
         }
 
         return true;
