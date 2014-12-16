@@ -15,10 +15,7 @@ import org.openscience.cdk.tools.periodictable.PeriodicTable;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  Copyright 2013 Alexander Savochkin
@@ -43,12 +40,16 @@ import java.util.Map;
  */
 public abstract class StructureTokenizer extends Tokenizer {
 
+    protected boolean assignNumbersToSameChains = true;
+
     IAtomContainer chemicalStructure = null;
     Iterator<IAtom> currentAtomIterator = null;
     List<List<IAtom>> pathesFromCurrentAtom = null;
     Iterator<List<IAtom>> currentPathIterator = null;
     Map<IAtom,Map<IAtom, IBond>> atoms2Bond
             = new HashMap<IAtom, Map<IAtom,IBond>>();
+
+    private Map<String, Integer> chainsCounts;
 
     int maxLength = 4;
 
@@ -64,9 +65,21 @@ public abstract class StructureTokenizer extends Tokenizer {
         setStructure(input);
     }
 
+    protected StructureTokenizer(AttributeFactory factory, Reader input, boolean assignNumbersToSameChains) {
+        super(factory, input);
+        this.assignNumbersToSameChains = assignNumbersToSameChains;
+        setStructure(input);
+    }
+
     protected abstract boolean setStructure(Reader input);
 
     protected void setStructure(IAtomContainer chemicalStructure) {
+        if (assignNumbersToSameChains)
+            if (chainsCounts == null)
+                chainsCounts = new TreeMap<String, Integer>();
+            else
+                chainsCounts.clear();
+
         //Initialize iterating through all structure's atoms
         this.chemicalStructure = chemicalStructure;
 
@@ -133,6 +146,20 @@ public abstract class StructureTokenizer extends Tokenizer {
             sb.append(getBondString(bond));
             sb.append(nextAtom.getSymbol());
             previousAtom = nextAtom;
+        }
+
+        if (assignNumbersToSameChains) {
+            String chain = sb.toString();
+            if ( chainsCounts.containsKey(chain) ) {
+                int chainCount = chainsCounts.get(chain);
+                sb.append( '_' );
+                sb.append( chainCount );
+                chainsCounts.put(chain, chainCount + 1);
+            }
+            else {
+                sb.append( "_0" );
+                chainsCounts.put(chain, 1);
+            }
         }
 
         termAtt.setEmpty().append(sb);
