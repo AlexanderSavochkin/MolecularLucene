@@ -1,0 +1,120 @@
+PARSER_BEGIN(SemistructuredFormulaParser)
+
+package org.molecularlucene.tokenizer;
+
+public class SemistructuredFormulaParser {
+
+    public ChemSubStructure parse() {
+        return Formula();
+    }
+  
+}
+
+abstract class ChemSubStructure {};
+
+class Elementary extends ChemSubStructure {
+    String subFormula;
+    public Elementary(String subFormula) {
+        this.subFormula = subFormula;
+    }
+}
+
+class Group {
+    ChemSubStructure containedSubStructure;
+
+    public BracesSubStructure(ChemSubStructure s) {
+        this.containedSubStructure = s;
+    }
+}
+
+class Term extends ChemSubStructure {
+    int multiplier;
+    ChemSubStructure subStrucure;
+
+    Term(ChemSubStructure subStrucure) {
+        this.multiplier = 1;
+        this.subStrucure = subStrucure;
+    }
+
+    Term(ChemSubStructure subStrucure, int multiplier) {
+        this.multiplier = multiplier;
+        this.subStrucure = subStrucure;
+    }
+
+}
+
+class Formula extends ChemSubStructure {
+    
+    ArrayList<ChemSubStructure> subStructures = null;
+
+    ConnectedSubStructures(ChemSubStructure subStrucure) {
+        this.subStructures = new ArrayList<ChemSubStructure>(subStrucure);
+    }
+
+    public void add(ChemSubStructure subStrucure) {
+        this.add( subStrucure );
+    }
+}
+
+
+PARSER_END(SemistructuredFormulaParser)
+
+//SKIP:  {  }
+TOKEN: { "(" | ")" | <NUM: (["0"-"9"])+> |
+    <ELEMENT: ( "H" | "He" | "Li" | "Be" | "B" | "C" | "N" | "O" | "F" | "Ne" | 
+    "Na" | "Mg" | "Al" | "Si" | "P" | "S" | "Cl" | "Ar" |
+    "K" | "Ca" | "Sc" | "Ti" | "V" | "Cr" | "Mn" | "Fe" | "Co" | "Ni" | "Cu" | "Zn" | "Ga" | "Ge" | "As" | "Se" | "Br" | "Kr" |
+    "Rb" | "Sr" | "Y" | "Zr" | "Nb" | "Mo" | "Tc" | "Ru" | "Rh" | "Pd" | "Ag" | "Cd" | "In" | "Sn" | "Sb" | "Te" | "I" | "Xe" |
+    "Cs" | "Ba" | "Hf" | "Ta" | "W" | "Re" | "Os" | "Ir" | "Pt" | "Au" | "Hg" | "Tl" | "Pb" | "Bi" | "Po" | "At" | "Rn"
+    "La" | "Ce" | "Pr" | "Nd" | "Pm" | "Sm" | "Eu" | "Gd" | "Tb" | "Dy" | "Ho" | "Er" | "Tm" | "Yb" | "Lu" |
+    "Ac" | "Th" | "Pa" | "U" | "Np" | "Pu" | "Am" | "Cm" | "Bk" | "Cf" | "Es" | "Fm" | "Md" | "No" | "Lr")> |
+    <ELEMENTARYGROUP: ("OH" | 
+    "CO3" | "NO2" | "NO3" | 
+    "SiO3" | "PO3" | "PO4" | "SO4" | "ClO" | "ClO2" | "ClO3" | "ClO4" |
+    "SeO3" | "SeO4" | "BrO" | "BrO2" | "BrO3" | "BrO4" | 
+    "IO" | "IO2" | "IO3" | "IO4" | 
+    "CH3" | "CH2" | "C2H5" | "C6H5" |
+    "COOH" | "NH2")>
+}
+
+//ELEMENT -> elementToken
+//ELEMENTARYGROUP -> elementaryGroupToken
+//GROUP -> '(' FORMULA ')'
+//TERM ->  (GROUP|ELEMENTARYGROUP|ELEMENT) NUMBER
+//FORMULA -> TERM*
+
+
+
+//Connected substructures rule (top level)
+ChemSubStructure Element(): {Token t;} {
+    t = <ELEMENTARYGROUP> { return new Element( t.image ); }
+}
+
+ChemSubStructure ElementaryGroup(): {Token t;} {
+    t = <ELEMENT> { return new ElementaryGroup( t.image); }
+}
+
+//Atom group in braces
+ChemSubStructure Group(): {ChemSubStructure e;} {
+    "(" e = Formula() { return new Group(e); } ")"
+}
+
+//Term is ...
+ChemSubStructure Term(): {ChemSubStructure e;} {
+    e = Group() { return new Term(e); }
+|
+    e = Group() n = <NUM> { return new Term(e, Integer.parseInt(n.image)); }
+|
+    e = ElementaryGroup() { return new Term(e); }
+|
+    e = ElementaryGroup() n = <NUM> { return new Term(e, Integer.parseInt(n.image) ); }
+|
+    e = Element() { return new Term(e); }
+|
+    e = Element()  n = <NUM> { return new Term(e, Integer.parseInt(n.image)); }
+}
+
+//Elementary (bottom level)
+ChemSubStructure Formula(): {ChemSubStructure e; Formula r;} {
+   e = Term() { f = new Formula(e); } ( e = Term() { f.add(e); } )* { return f; } 
+}
