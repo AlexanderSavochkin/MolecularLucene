@@ -1,4 +1,4 @@
-package org.molecularlucene;
+package org.molecularlucene.tokenizer;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
