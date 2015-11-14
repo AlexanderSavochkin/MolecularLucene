@@ -1,0 +1,120 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.lucenechemistry</groupId>
+  <artifactId>lucenechemistry</artifactId>
+  <version>1.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>elementarygroupchains-gen</name>
+<!--  <url>http://maven.apache.org</url> -->
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!--According to http://blog.rueedlinger.ch/2012/09/use-github-as-maven-remote-repository/ Use your own path here! -->
+    <internal.repo.path>file:D:\work\maven-repository\</internal.repo.path>
+  </properties>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-analyzers-common</artifactId>
+      <version>4.3.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-queryparser</artifactId>
+      <version>4.3.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openscience.cdk</groupId>
+      <artifactId>cdk-io</artifactId>
+<!--      <version>${cdk.version}</version> -->
+      <version>1.4.16</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openscience.cdk</groupId>
+      <artifactId>cdk-smiles</artifactId>
+<!--      <version>${cdk.version}</version> -->
+      <version>1.4.16</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openscience.cdk</groupId>
+      <artifactId>cdk-core</artifactId>
+<!--      <version>${cdk.version}</version> -->
+      <version>1.4.16</version>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.10</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>lucenechemistry</artifactId>
+      <version>1.0.1-SNAPSHOT</version>
+    </dependency>		    
+    
+  </dependencies>
+
+  <build>
+      <plugins>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>javacc-maven-plugin</artifactId>
+          <version>2.6</version>
+          <dependencies>
+            <dependency>
+              <groupId>net.java.dev.javacc</groupId>
+              <artifactId>javacc</artifactId>
+              <version>6.1.2</version>
+            </dependency>
+          </dependencies>
+          <executions>
+            <execution>
+              <id>javacc</id>
+              <phase>generate-sources</phase>
+              <goals>
+                <goal>javacc</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>jjtree-javacc</id>
+              <phase>generate-sources</phase>
+              <goals>
+                <goal>jjtree-javacc</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <grammarEncoding>UTF-8</grammarEncoding>
+          </configuration>
+        </plugin>
+      </plugins>
+  </build>
+  
+  <repositories>
+     <repository> <!--This repository contains chemical development kit.-->
+        <id>ucc-repo</id>
+        <name>UCC Repository</name>
+        <url>http://ambit.uni-plovdiv.bg:8083/nexus/content/repositories/thirdparty</url>
+     </repository>
+  </repositories>  
+
+  <distributionManagement>
+    <repository>
+      <id>internal.repo</id>
+      <name>Internal Repository</name>
+      <url>${internal.repo.path}</url>
+    </repository>
+  </distributionManagement>
+
+</project>
