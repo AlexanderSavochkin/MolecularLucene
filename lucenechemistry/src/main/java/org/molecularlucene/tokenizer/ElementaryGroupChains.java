@@ -20,7 +20,7 @@ import java.util.Map;
  */
 
 class ElementaryGroupChains {
-    private final static Map<String, Map<String, Integer>> groupToChainMap = new HashMap<String, Map<String, Integer>>() {{
+    final static Map<String, Map<String, Integer>> groupToChainMap = new HashMap<String, Map<String, Integer>>() {{
         put("OH", new HashMap<String, Integer>() {{
             put("O", 1);
         }});

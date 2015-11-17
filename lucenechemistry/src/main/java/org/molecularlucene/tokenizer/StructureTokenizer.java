@@ -74,11 +74,14 @@ public abstract class StructureTokenizer extends Tokenizer {
     protected abstract boolean setStructure(Reader input);
 
     protected void setStructure(IAtomContainer chemicalStructure) {
-        if (assignNumbersToSameChains)
-            if (chainsCounts == null)
+        if (assignNumbersToSameChains) {
+            if (chainsCounts == null) {
                 chainsCounts = new TreeMap<String, Integer>();
-            else
+            }
+            else {
                 chainsCounts.clear();
+            }
+        }
 
         //Initialize iterating through all structure's atoms
         this.chemicalStructure = chemicalStructure;
@@ -97,8 +100,9 @@ public abstract class StructureTokenizer extends Tokenizer {
     }
 
     protected boolean processNextAtom() {
-        if (!currentAtomIterator.hasNext())
+        if (!currentAtomIterator.hasNext()) {
             return false;
+        }
         IAtom currentAtom = currentAtomIterator.next();
         pathesFromCurrentAtom = PathTools.getPathsOfLengthUpto(chemicalStructure, currentAtom, maxLength);
         currentPathIterator = pathesFromCurrentAtom.iterator();
@@ -112,26 +116,32 @@ public abstract class StructureTokenizer extends Tokenizer {
         //Check if we can go on with iterations
         while (!currentPathIterator.hasNext()) {
             //Go to next atom
-            if (!processNextAtom())
+            if (!processNextAtom()) {
                 //It is possible that reader is reused, so try to reinitialize structure from reader
-                if ( setStructure( input ) )
+                if (setStructure(input)) {
                     continue;
-                else
+                }
+                else {
                     return false;
+                }
+            }
         }
         List<IAtom> currentPath = currentPathIterator.next();
 
         //Convert path to token
         StringBuffer sb = new StringBuffer();
         IAtom previousAtom = currentPath.get(0);
-        if (previousAtom instanceof  IPseudoAtom)
-            sb.append( "[x]" );
+        if (previousAtom instanceof  IPseudoAtom) {
+            sb.append("[x]");
+        }
         else {
             Integer atomicNumber = PeriodicTable.getAtomicNumber(previousAtom.getSymbol());
-            if (atomicNumber != null)
-                sb.append( previousAtom.getSymbol() );
-            else
-                sb.append( "[x]" );
+            if (atomicNumber != null) {
+                sb.append(previousAtom.getSymbol());
+            }
+            else {
+                sb.append("[x]");
+            }
         }
         for (int i = 1; i < currentPath.size(); ++i) {
             IAtom nextAtom = currentPath.get(i);
@@ -170,20 +180,16 @@ public abstract class StructureTokenizer extends Tokenizer {
     protected String getBondString(IBond b)
     {
         String result = "";
-        if (b.getFlag(CDKConstants.ISAROMATIC))
-        {
+        if (b.getFlag(CDKConstants.ISAROMATIC)) {
             result = ":";
         }
-        else if (b.getOrder() == IBond.Order.SINGLE)
-        {
+        else if (b.getOrder() == IBond.Order.SINGLE) {
             result = "-";
         }
-        else if (b.getOrder() == IBond.Order.DOUBLE)
-        {
+        else if (b.getOrder() == IBond.Order.DOUBLE) {
             result = "=";
         }
-        else if (b.getOrder() == IBond.Order.TRIPLE)
-        {
+        else if (b.getOrder() == IBond.Order.TRIPLE) {
             result = "#";
         }
         return result;
